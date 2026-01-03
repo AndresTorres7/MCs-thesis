@@ -11,16 +11,17 @@ sampFit <- function(x, frac) {
     
   for(i in 1:length(x)) {
 
-##Fitting constant lambda and fixed mu YUle
-cat("Fitting models for tree number ",i,"\n")
+    cat("Fitting models for tree number ",i,"\n")
     tot_time<-max(node.age(x[[i]])$ages)
+    
+##Fitting constant lambda and fixed mu YUle
 
 f.lamb<-function(t,y){y[1]}
 f.mu<-function(t,y){0}
 lamb_par_init<-c(0.05)
 mu_par_init<-c()
 cat("Starting yule model")
-yule <-fit_bd(x[[1]],tot_time,f.lamb,f.mu,lamb_par_init,
+yule <-fit_bd(x[[i]],tot_time,f.lamb,f.mu,lamb_par_init,
               mu_par_init,f=frac,cst.lamb=TRUE,fix.mu=TRUE)
 print(yule)
 ##Fitting constant lambda and mu
