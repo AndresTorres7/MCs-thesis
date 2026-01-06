@@ -31,7 +31,7 @@ paleo_fun <- function(t) {
 
 time_grid <- seq(
   from = 0,
-  to   = max(env_mean$Age),
+  to   = 40, # the oldest phylogeny is 37.46137 my
   length.out = 1000
 )
 
@@ -40,7 +40,7 @@ env_RPANDA <- data.frame(
   Env  = predict(ps, x = time_grid)
 )
 
-write.csv(env_RPANDA, "andeselevaciondatos.csv", col.names = F)
+write.csv(env_RPANDA, "andeselevaciondatos.csv", row.names = F)
 env_RPANDA <- read.csv("andeselevaciondatos.csv")
 
 #Visualize the smooth curve (important sanity check)
