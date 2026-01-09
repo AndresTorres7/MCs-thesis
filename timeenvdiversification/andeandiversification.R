@@ -25,19 +25,24 @@ ps <- smooth.Pspline(
   norder = 2
 )
 
-paleo_fun <- function(t) {
-  predict(ps, x = t)
-}
+# Oldest age covered by the paleo-elevation data
+max_age <- max(env_mean$Age)
 
+# Paleo-elevation function with truncated extrapolation
+paleo_fun <- function(t) {
+  t_trunc <- pmin(t, max_age)   # clamp time to data range
+  predict(ps, x = t_trunc)
+}
+# Time grid for RPANDA
 time_grid <- seq(
   from = 0,
-  to   = 40, # the oldest phylogeny is 37.46137 my
+  to   = 38,   # oldest phylogeny age
   length.out = 1000
 )
 
 env_RPANDA <- data.frame(
   Time = time_grid,
-  Env  = predict(ps, x = time_grid)
+  Env  = paleo_fun(time_grid)
 )
 
 write.csv(env_RPANDA, "andeselevaciondatos.csv", row.names = F)
@@ -105,7 +110,7 @@ sampFit <- function(x, frac) {
     f.lamb<-function(t,x,y){y[1]*exp(y[2]*x)}
     f.mu<-function(t,x,y){y[1]}
     lamb_par_init<-c(0.10,0.001)
-    mu_par_init<- c(0.01)
+    mu_par_init<- c(0.1)
     cat("Starting expoBAnd model")
     expoBAnd <-fit_env(x[[i]],env_RPANDA,tot_time,f.lamb,f.mu,
                        lamb_par_init,mu_par_init,f=1,cst.mu=TRUE,dt=1e-3)
@@ -117,7 +122,7 @@ sampFit <- function(x, frac) {
     f.lamb<-function(t,x,y){y[1]+y[2]*x}
     f.mu<-function(t,x,y){y[1]}
     lamb_par_init<-c(0.10,0.001)
-    mu_par_init<- c(0.01)
+    mu_par_init<- c(0.1)
     cat("Starting linearBAnd model")
     linearBAnd <-fit_env(x[[i]],env_RPANDA,tot_time,f.lamb,f.mu,
                          lamb_par_init,mu_par_init,f=1,fix.mu=TRUE,dt=1e-3)
@@ -143,10 +148,10 @@ sampFit <- function(x, frac) {
     f.lamb<-function(t,x,y){y[1]}
     f.mu<-function(t,x,y){y[1]+y[2]*x}
     lamb_par_init<-c(0.1)
-    mu_par_init<- c(0.01,0.0001)
+    mu_par_init<- c(0.1,0.0001)
     cat("Starting linearDAnd model")
     linearDAnd <-fit_env(x[[i]],env_RPANDA,tot_time,f.lamb,f.mu,
-                         lamb_par_init,mu_par_init,f=1,fix.mu=TRUE,dt=1e-3)
+                         lamb_par_init,mu_par_init,f=1,dt=1e-3)
    
     print(linearDAnd)
     
