@@ -24,7 +24,7 @@ scripts <- c("rangeDispersal.R", "nicheEvolution.R","speciateAllopatric.R","spec
 
 
 for (i in 1:length(scripts)){
-  scripts[[i]] <- paste("~/Biologia/SkeelsShareddiversificationTest/Code/AuxiliaryScripts/DREAD/",scripts[[i]],sep="")
+  scripts[[i]] <- paste("~/Biologia/diversificationTest/Code/AuxiliaryScripts/DREAD/",scripts[[i]],sep="")
 }
 lapply(scripts, source)
 
